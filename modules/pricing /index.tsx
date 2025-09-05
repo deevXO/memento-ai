@@ -3,6 +3,7 @@ import { Check, Crown, Star, Zap } from "lucide-react";
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useSession, signIn } from "next-auth/react";
 
 const plans = [
   {
@@ -42,10 +43,27 @@ const plans = [
 ];
 
 const Pricing = () => {
+  const { data: session } = useSession();
+
   const scrollToEditor = () => {
     const element = document.getElementById("editor");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handlePlanAction = async (planName: string) => {
+    if (!session?.user) {
+      // User is not signed in, prompt for sign up
+      await signIn("google");
+    } else {
+      // User is signed in, scroll to editor or handle Pro upgrade
+      if (planName === "Free") {
+        scrollToEditor();
+      } else {
+        // Handle Pro plan upgrade (existing payment modal logic)
+        scrollToEditor();
+      }
     }
   };
 
@@ -156,9 +174,14 @@ const Pricing = () => {
                 <Button
                   variant={plan.popular ? "default" : "secondary"}
                   className="w-full font-semibold"
-                  onClick={scrollToEditor}
+                  onClick={() => handlePlanAction(plan.name)}
                 >
-                  {plan.cta}
+                  {!session?.user 
+                    ? "Sign Up to Start" 
+                    : plan.name === "Free" 
+                    ? "Start Free Now" 
+                    : "Upgrade to Pro"
+                  }
                 </Button>
               </div>
             </motion.div>

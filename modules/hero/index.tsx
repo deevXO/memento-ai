@@ -3,13 +3,36 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Play, Sparkles, ArrowRight } from "lucide-react";
+import { useSession, signIn } from "next-auth/react";
 import BeforeAfterSlider from "./BeforeAfterSlider";
 
 const Hero = () => {
+  const { data: session } = useSession();
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleTryFree = async () => {
+    if (session?.user) {
+      // User is signed in, scroll to editor
+      scrollToSection("editor");
+    } else {
+      // User is not signed in, prompt for sign up
+      await signIn("google");
+    }
+  };
+
+  const handleLaunchApp = async () => {
+    if (session?.user) {
+      // User is signed in, scroll to editor
+      scrollToSection("editor");
+    } else {
+      // User is not signed in, prompt for sign up
+      await signIn("google");
     }
   };
 
@@ -81,19 +104,19 @@ const Hero = () => {
             <Button
               variant="default"
               size="lg"
-              onClick={() => scrollToSection("editor")}
+              onClick={handleTryFree}
               className="group text-white"
             >
               <Play className="h-5 w-5 mr-2 group-hover:animate-pulse" />
-              Try Free Now
+              {session?.user ? "Try Free Now" : "Sign Up Free"}
             </Button>
             <Button
               variant="secondary"
               size="lg"
-              onClick={() => scrollToSection("editor")}
+              onClick={handleLaunchApp}
               className="group"
             >
-              Launch App
+              {session?.user ? "Launch App" : "Get Started"}
               <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </motion.div>
