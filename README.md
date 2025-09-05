@@ -14,7 +14,6 @@
 - ⚡ **AI Upscale & Enhance** - Boost resolution up to 4x while fixing details
 - ✂️ **Smart Crop & Face Focus** - Perfect thumbnails automatically
 - 📝 **Watermark & Text Overlay** - Brand your content professionally
-- 🌙 **Dark/Light Theme** - Beautiful responsive design
 - 🔐 **Google Authentication** - Secure login with NextAuth
 - 💳 **Stripe Integration** - Pro subscription management
 - 📱 **Mobile Responsive** - Works perfectly on all devices
@@ -37,8 +36,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/deevXO/photo-editor.git
-   cd photo-editor
+   git clone https://github.com/deevXO/memento-ai.git
+   cd memento-ai
    ```
 
 2. **Install dependencies**
