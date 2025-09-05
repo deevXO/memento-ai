@@ -1,11 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "tailwindcss";
 
 @theme {
   /* fonts */
-  --font-inter: 'Poppins', 'Lora', 'Fira Code', sans-serif;
+  --font-inter: "Inter", sans-serif;
 
   /* radius */
   --radius: 1rem;
@@ -43,56 +42,34 @@
   --color-input: hsl(220 27% 10%);
   --color-ring: hsl(192 100% 50%);
 
-  /* You can reference these in utilities via var() */
-  --gradient-primary: linear-gradient(
-    135deg,
-    hsl(192 100% 50%),
-    hsl(271 81% 56%)
-  );
-  --gradient-glass: linear-gradient(
-    135deg,
-    hsl(220 27% 8% / 0.4),
-    hsl(220 27% 8% / 0.1)
-  );
-  --gradient-border: linear-gradient(
-    135deg,
-    hsl(192 100% 50% / 0.3),
-    hsl(271 81% 56% / 0.3)
-  );
+  /* Custom gradients and effects */
+  --gradient-primary: linear-gradient(135deg, hsl(192 100% 50%), hsl(271 81% 56%));
+  --gradient-glass: linear-gradient(135deg, hsl(220 27% 8% / 0.4), hsl(220 27% 8% / 0.1));
+  --gradient-border: linear-gradient(135deg, hsl(192 100% 50% / 0.3), hsl(271 81% 56% / 0.3));
 
   --glow-primary: 0 0 40px hsl(192 100% 50% / 0.3);
   --glow-secondary: 0 0 40px hsl(271 81% 56% / 0.3);
   --glow-subtle: 0 4px 20px hsl(192 100% 50% / 0.1);
+
+  --backdrop-blur-glass: blur(20px);
+  --spacing: 0.25rem;
 }
 
-/* ===== BASE ===== */
 @layer base {
-  :root {
-    color-scheme: dark; /* you’re using a dark design system */
-  }
-
   * {
     border-color: var(--color-border);
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
-    background: linear-gradient(
-      135deg,
-      var(--color-background),
-      hsl(220 27% 4%)
-    );
-    min-height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-inter);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Rounded scale (maps to rounded-lg/md/sm via tokens in v4) */
-  :root {
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
-  }
-
-  /* Scrollbar */
+  /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -104,15 +81,15 @@
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(192 100% 70%);
+    background: var(--color-primary-glow);
   }
 }
 
-/* ===== UTILITIES (ported helpers) ===== */
 @layer utilities {
+  /* Glass effects */
   .glass {
     background: hsl(220 27% 8% / 0.1);
-    backdrop-filter: blur(20px);
+    backdrop-filter: var(--backdrop-blur-glass);
     border: 1px solid hsl(220 27% 12% / 0.2);
   }
 
@@ -122,114 +99,43 @@
     border-radius: inherit;
   }
 
+  /* Gradient backgrounds */
   .bg-gradient-primary {
     background: var(--gradient-primary);
   }
+  
   .bg-gradient-glass {
     background: var(--gradient-glass);
   }
 
+  /* Glow shadows */
   .shadow-glow-primary {
     box-shadow: var(--glow-primary);
   }
+  
   .shadow-glow-secondary {
     box-shadow: var(--glow-secondary);
   }
+  
   .shadow-glow-subtle {
     box-shadow: var(--glow-subtle);
   }
 
+  /* Backdrop blur utilities */
+  .backdrop-blur-glass {
+    backdrop-filter: var(--backdrop-blur-glass);
+  }
+
+  /* Transitions */
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
   .transition-bounce {
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
-}
 
-/* ===== ANIMATIONS (v4: define keyframes, then make utilities) ===== */
-@keyframes accordion-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-accordion-content-height);
-  }
-}
-@keyframes accordion-up {
-  from {
-    height: var(--radix-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
-}
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes slide-in-right {
-  0% {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-@keyframes glow-pulse {
-  0%,
-  100% {
-    box-shadow: var(--glow-primary);
-  }
-  50% {
-    box-shadow: var(--glow-secondary);
-  }
-}
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@layer utilities {
-  .animate-accordion-down {
-    animation: accordion-down 0.2s ease-out;
-  }
-  .animate-accordion-up {
-    animation: accordion-up 0.2s ease-out;
-  }
-  .animate-fade-in {
-    animation: fade-in 0.6s ease-out;
-  }
-  .animate-slide-in-right {
-    animation: slide-in-right 0.6s ease-out;
-  }
-  .animate-glow-pulse {
-    animation: glow-pulse 2s ease-in-out infinite;
-  }
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-}
-
-/* ===== OPTIONAL: container look-alike (if you relied on theme.container) ===== */
-@layer utilities {
-  .font-inter {
-    font-family: var(--font-inter);
-  }
-  
+  /* Container utility */
   .app-container {
     margin-inline: auto;
     padding-inline: 2rem;
@@ -240,22 +146,91 @@
     .app-container {
       max-width: 1400px;
     }
-  } /* matches 2xl: 1400px */
+  }
+}
 
-  /* Additional responsive utilities */
-  .text-responsive {
-    font-size: clamp(0.875rem, 2vw, 1rem);
+/* Animation keyframes */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: var(--glow-primary);
+  }
+  50% {
+    box-shadow: var(--glow-secondary);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-accordion-down {
+    animation: accordion-down 0.2s ease-out;
   }
   
-  .heading-responsive {
-    font-size: clamp(1.5rem, 4vw, 3rem);
+  .animate-accordion-up {
+    animation: accordion-up 0.2s ease-out;
   }
   
-  .padding-responsive {
-    padding: clamp(1rem, 4vw, 2rem);
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out;
   }
   
-  .margin-responsive {
-    margin: clamp(0.5rem, 2vw, 1rem);
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s ease-out;
+  }
+  
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
   }
 }

@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  User
+  Admin
+  Moderator
+}
+
+enum Plan {
+  Free
+  Paid
+}
+
+model users {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  avatar           String?
+  stripeCustomerId String?
+  plan             Plan     @default(Free)
+  role             Role     @default(User)
+  usageCount       Int      @default(0)
+  usageLimit       Int      @default(3)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  subscriptions    subscriptions[]
+}
+
+model subscriptions {
+  id                   String   @id @default(uuid())
+  userId               String
+  stripeSubscriptionId String
+  stripeCustomerId     String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 users    @relation(fields: [userId], references: [id])
+}
